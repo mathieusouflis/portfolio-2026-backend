@@ -10,9 +10,9 @@
 
 **Please do not open a public GitHub issue for security vulnerabilities.**
 
-To report a security issue, email the maintainers at:
+To report a security issue, email:
 
-> **[SECURITY_EMAIL]** — replace with your actual security contact before publishing this repository.
+> **contact@mathieusouflis.com**
 
 Include:
 

@@ -1,13 +1,11 @@
 ---
 domain: product-code
 type: reference
-owner: <!-- team/role that owns code conventions -->
-last_reviewed:
+owner: Mathieu (solo maintainer)
+last_reviewed: 2026-07-02
 ---
 
 # Code Style Guide
-
-<!-- Replace this file with your project's actual conventions. The sections below are a starting point. -->
 
 This document defines the code style and formatting conventions for this project. Consistency matters more than any individual rule — when in doubt, follow existing patterns in the codebase.
 
@@ -15,11 +13,10 @@ This document defines the code style and formatting conventions for this project
 
 ## Tooling
 
-<!-- Describe the linter / formatter used and how to run them. -->
-
 ```bash
-# Check for style errors
-# Auto-fix formatting
+cargo fmt --check                        # Check formatting
+cargo fmt                                # Auto-fix formatting
+cargo clippy --workspace --all-targets   # Lint
 ```
 
 All checks must pass before a PR can be merged. The CI pipeline enforces this automatically — see [operations/concept/ci-cd-pipeline](../../operations/concept/ci-cd-pipeline.md).
@@ -32,71 +29,66 @@ All checks must pass before a PR can be merged. The CI pipeline enforces this au
 - **Explicit over implicit** — avoid magic; name things for what they do
 - **Small functions** — each function should do one thing
 - **No dead code** — remove commented-out code before committing
+- **Domain stays framework-agnostic** — `domain` and `application` must not depend on Axum or sqlx types; see [product-code/decisions/0001-hexagonal-architecture](../decisions/0001-hexagonal-architecture.md)
 
 ---
 
 ## Naming Conventions
 
-<!-- Adapt the table below to your language and framework. -->
+Standard Rust conventions, enforced by `clippy`:
 
 | Element | Convention | Example |
 |---------|------------|---------|
-| Files | `kebab-case` | `user-service.ts` |
-| Classes | `PascalCase` | `UserService` |
-| Functions / methods | `camelCase` | `getUserById` |
-| Constants | `UPPER_SNAKE_CASE` | `MAX_RETRY_COUNT` |
-| Private members | `_prefixed` or language convention | `_cache` |
+| Files / modules | `snake_case` | `project_repository.rs` |
+| Types (structs, enums, traits) | `PascalCase` | `ProjectRepository` |
+| Functions / methods / variables | `snake_case` | `find_by_slug` |
+| Constants / statics | `SCREAMING_SNAKE_CASE` | `MAX_RETRY_COUNT` |
+| Crates | `kebab-case` on crates.io, `snake_case` internally | `application` |
 
 ---
 
 ## Formatting
 
-<!-- Describe spacing, indentation, line length, quotes, etc. -->
-
-- **Indentation**: X spaces (no tabs)
-- **Max line length**: 100 characters
-- **Trailing commas**: yes / no
-- **Quotes**: single / double
+Governed entirely by `rustfmt` defaults (`cargo fmt`) — no manual bikeshedding on indentation, line length, or trailing commas. If a formatting question isn't answered by running `cargo fmt`, it's not a formatting question.
 
 ---
 
 ## Import / Dependency Order
 
-<!-- Describe how imports should be ordered. Example for languages with explicit imports: -->
+`rustfmt` groups and sorts `use` statements automatically. By convention, keep this order:
 
-1. Standard library / built-ins
-2. Third-party packages
-3. Internal packages / modules
-4. Relative imports
-
-Separate each group with a blank line.
+1. `std`
+2. External crates (`axum`, `sqlx`, `serde`, ...)
+3. Workspace crates (`domain`, `application`, `infrastructure`)
+4. `crate::`/`self::`/`super::` (local module) imports
 
 ---
 
 ## Error Handling
 
-- Never swallow errors silently — log or propagate
-- Use typed/structured errors where the language supports it
-- Validate inputs at system boundaries; trust internal code
+- Never swallow errors silently — propagate with `?` or handle explicitly
+- Use typed errors (`enum` implementing `std::error::Error`, e.g. via `thiserror`) in `domain`/`application`; reserve broader error types (e.g. `anyhow`) for the `web` binary boundary where errors just need to become an HTTP response
+- Validate inputs at system boundaries (`web` handlers); trust internal code once past that boundary
+- No `unwrap()`/`expect()` outside of tests and startup code (e.g. config parsing where a bad value should fail fast)
 
 ---
 
 ## Testing Conventions
 
-- Tests live next to the code they test, or in a dedicated `tests/` directory
-- Each test should be independent and not rely on shared mutable state
-- Test names should describe the expected behavior: `should return 404 when user not found`
+- Unit tests live in `#[cfg(test)] mod tests` next to the code they test
+- Integration tests (exercising a crate's public API, e.g. `web`'s HTTP routes) live in that crate's `tests/` directory
+- Each test should be independent and not rely on shared mutable state (a fresh test database/transaction per test, not a shared one)
+- Test names describe the expected behavior: `returns_404_when_project_not_found`
 
 ---
 
 ## Running the Full Validation Suite
 
 ```bash
-# Replace with your actual commands
-# Lint
-# Type-check (if applicable)
-# Tests
-# Build
+cargo fmt --check
+cargo clippy --workspace --all-targets -- -D warnings
+cargo test --workspace
+cargo build --workspace --release
 ```
 
 All four must pass before pushing.

@@ -1,8 +1,8 @@
 ---
 domain: operations
 type: concept
-owner: <!-- team/role that owns CI/CD -->
-last_reviewed:
+owner: Mathieu (solo maintainer)
+last_reviewed: 2026-07-02
 ---
 
 # CI/CD Pipeline
@@ -15,11 +15,11 @@ Runs on every push to `main` and every pull request targeting `main`. Three jobs
 
 | Job | Purpose |
 |---|---|
-| `lint` | Runtime setup, dependency install, lint/type-check |
-| `test` | Runtime setup, dependency install, test suite |
-| `build` | Runs after `lint` and `test` pass; runtime setup, dependency install, build |
+| `lint` | `cargo fmt --check`, `cargo clippy --workspace --all-targets -- -D warnings` |
+| `test` | `cargo test --workspace` |
+| `build` | Runs after `lint` and `test` pass; `cargo build --workspace --release` |
 
-**This workflow ships as a placeholder** — every step currently runs `echo "Replace this step with..."` instead of a real command. It is language-agnostic by construction: fill in the runtime-setup action (`actions/setup-node`, `actions/setup-python`, `actions/setup-go`, etc.) and the install/lint/test/build commands for your stack, then delete the template comment block at the top of the file.
+Rust setup and dependency caching use `dtolnay/rust-toolchain@stable` and `Swatinem/rust-cache@v2`. The `test` job doesn't run against a live Postgres instance yet — nothing in the workspace uses sqlx queries yet either, so there's nothing to check against. Once the `infrastructure` crate adds real queries (see [decisions/0002-axum-postgres-sqlx](../../product-code/decisions/0002-axum-postgres-sqlx.md)), a Postgres service container will need to be added to `test` (and `lint`, since `cargo clippy` also compiles) for sqlx's compile-time query checking to succeed.
 
 ## Commit message validation — `.githooks/commit-msg` + `.github/workflows/commitlint.yml`
 
@@ -36,7 +36,7 @@ Triggered by pushing a tag matching `v*.*.*`. Creates a GitHub Release with auto
 
 ## Dependency updates — `.github/dependabot.yml`
 
-Two ecosystems are always active regardless of language: `github-actions` (workflow action versions) and `docker`, both checked monthly. Language-specific ecosystems (`npm`, `pip`, `gomod`, `cargo`, `maven`, `gradle`, `composer`, `bundler`) are present but commented out — uncomment the one matching this project's stack.
+Three ecosystems are active: `cargo` (weekly, grouped minor/patch updates), `github-actions` (workflow action versions, monthly), and `docker` (monthly — relevant once a `Dockerfile` exists for the [Dokploy deployment](../runbooks/deployment-runbook.md)).
 
 ## See also
 
