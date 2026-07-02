@@ -50,9 +50,8 @@ body:
       description: Your runtime versions.
       placeholder: |
         - OS: macOS 15 / Ubuntu 24.04 / Windows 11
-        - Runtime: Node 22.x / Python 3.12 / Go 1.22 / etc.
-        - Package manager / build tool version (if applicable)
-        - Browser (if applicable): Chrome 134
+        - rustc version: `rustc --version`
+        - Postgres version (if relevant)
     validations:
       required: true
 

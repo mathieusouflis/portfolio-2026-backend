@@ -9,7 +9,7 @@ Before opening an issue, please check these resources:
 
 ## Asking a question
 
-For questions that are not bugs or feature requests, use **[GitHub Discussions](../../discussions)** rather than opening an issue. This keeps the issue tracker focused on actionable items.
+There's no separate Discussions space for this project — open a blank [issue](../../issues/new) for questions too.
 
 ## Reporting a bug
 

@@ -2,14 +2,15 @@
 # Optional pre-push hook — runs before every `git push`.
 # Activate with: git config core.hooksPath .githooks
 #
-# Uncomment and adapt the checks below to match your project's tooling.
-# Remove checks that don't apply. Keep this hook fast — slow hooks get bypassed.
+# Fast checks only (matches the `lint` job in .github/workflows/ci.yml).
+# The full test suite is left to CI since it may need a database once
+# sqlx queries land — see docs/product-code/decisions/0002-axum-postgres-sqlx.md.
 
-# echo "Running tests before push..."
-# your-test-command || exit 1
+echo "Checking formatting..."
+cargo fmt --all --check || exit 1
 
-# echo "Running build check..."
-# your-build-command || exit 1
+echo "Running clippy..."
+cargo clippy --workspace --all-targets -- -D warnings || exit 1
 
 # ── Documentation TODOs ─────────────────────────────────────────────────
 # Non-blocking: lists template placeholder docs (docs/**/todo_*.md) that
