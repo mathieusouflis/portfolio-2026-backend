@@ -1,0 +1,96 @@
+name: CI
+
+# ──────────────────────────────────────────────────────────────────────────────
+# TEMPLATE — adapt this workflow to your tech stack before committing.
+# Replace the placeholder steps below with your actual install/lint/test/build
+# commands. Remove this comment block when done.
+# ──────────────────────────────────────────────────────────────────────────────
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  lint:
+    name: Lint & type-check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+
+      # ── Install runtime ────────────────────────────────
+      # Replace or extend with your language setup action.
+      # Examples:
+      #   Node:   actions/setup-node@v4
+      #   Python: actions/setup-python@v5
+      #   Go:     actions/setup-go@v5
+      #   Java:   actions/setup-java@v4
+      - name: Set up runtime
+        run: echo "Replace this step with your runtime setup"
+
+      # ── Install dependencies ───────────────────────────
+      - name: Install dependencies
+        run: echo "Replace with -> npm ci / pip install / go mod download / ..."
+
+      # ── Lint ───────────────────────────────────────────
+      - name: Lint
+        run: echo "Replace with your lint command"
+
+  test:
+    name: Tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Set up runtime
+        run: echo "Replace this step with your runtime setup"
+
+      - name: Install dependencies
+        run: echo "Replace with your install command"
+
+      - name: Run tests
+        run: echo "Replace with your test command"
+
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    needs: [lint, test]
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Set up runtime
+        run: echo "Replace this step with your runtime setup"
+
+      - name: Install dependencies
+        run: echo "Replace with your install command"
+
+      - name: Build
+        run: echo "Replace with your build command"
+
+  # ── Always applicable, regardless of language ──────────────────────────
+  # Backstop for the pre-push hook check: catches contributors who never
+  # activated .githooks. Independent of the placeholder jobs above so it
+  # keeps working after you replace lint/test/build with real steps.
+  docs-todo-check:
+    name: Documentation TODOs
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: List remaining template placeholders
+        run: |
+          TODO_DOCS=$(find docs -name 'todo_*.md' 2>/dev/null || true)
+          if [ -n "$TODO_DOCS" ]; then
+            echo "$TODO_DOCS" | while read -r f; do
+              echo "::warning file=$f::Template placeholder not yet filled in — see docs/README.md"
+            done
+          fi
+          exit 0

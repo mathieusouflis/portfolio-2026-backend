@@ -1,0 +1,27 @@
+#!/bin/sh
+# Optional pre-push hook — runs before every `git push`.
+# Activate with: git config core.hooksPath .githooks
+#
+# Uncomment and adapt the checks below to match your project's tooling.
+# Remove checks that don't apply. Keep this hook fast — slow hooks get bypassed.
+
+# echo "Running tests before push..."
+# your-test-command || exit 1
+
+# echo "Running build check..."
+# your-build-command || exit 1
+
+# ── Documentation TODOs ─────────────────────────────────────────────────
+# Non-blocking: lists template placeholder docs (docs/**/todo_*.md) that
+# still need to be filled in, per the domain × type documentation model
+# in docs/README.md. Never fails the push — just keeps the remaining work
+# visible instead of silently forgotten.
+TODO_DOCS=$(find docs -name 'todo_*.md' 2>/dev/null)
+if [ -n "$TODO_DOCS" ]; then
+  echo ""
+  echo "  Documentation still has template placeholders:"
+  echo "$TODO_DOCS" | sed 's/^/    - /'
+  echo ""
+fi
+
+exit 0

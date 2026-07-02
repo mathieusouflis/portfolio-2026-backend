@@ -1,0 +1,64 @@
+version: 2
+updates:
+  # ── Application dependencies ─────────────────────────────
+  # Uncomment whichever package-ecosystem matches this project
+  # (https://docs.github.com/en/code-security/dependabot/dependabot-version-updates/configuration-options-for-the-dependabot.yml-file#package-ecosystem).
+
+  # - package-ecosystem: "npm" # Node / JavaScript / TypeScript
+  #   directory: "/"
+  #   schedule:
+  #     interval: "weekly"
+  #   cooldown:
+  #     default-days: 3
+  #   groups:
+  #     minor-and-patch:
+  #       applies-to: version-updates
+  #       update-types:
+  #         - "minor"
+  #         - "patch"
+
+  # - package-ecosystem: "pip" # Python
+  #   directory: "/"
+  #   schedule:
+  #     interval: "weekly"
+
+  # - package-ecosystem: "gomod" # Go
+  #   directory: "/"
+  #   schedule:
+  #     interval: "weekly"
+
+  # - package-ecosystem: "cargo" # Rust
+  #   directory: "/"
+  #   schedule:
+  #     interval: "weekly"
+
+  # - package-ecosystem: "maven" # Java (Maven)
+  #   directory: "/"
+  #   schedule:
+  #     interval: "weekly"
+
+  # - package-ecosystem: "gradle" # Java / Kotlin (Gradle)
+  #   directory: "/"
+  #   schedule:
+  #     interval: "weekly"
+
+  # - package-ecosystem: "composer" # PHP
+  #   directory: "/"
+  #   schedule:
+  #     interval: "weekly"
+
+  # - package-ecosystem: "bundler" # Ruby
+  #   directory: "/"
+  #   schedule:
+  #     interval: "weekly"
+
+  # ── Always applicable, regardless of language ────────────
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "monthly"
+
+  - package-ecosystem: "docker"
+    directory: "/"
+    schedule:
+      interval: "monthly"
