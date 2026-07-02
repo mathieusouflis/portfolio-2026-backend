@@ -1,11 +1,5 @@
 name: CI
 
-# ──────────────────────────────────────────────────────────────────────────────
-# TEMPLATE — adapt this workflow to your tech stack before committing.
-# Replace the placeholder steps below with your actual install/lint/test/build
-# commands. Remove this comment block when done.
-# ──────────────────────────────────────────────────────────────────────────────
-
 on:
   push:
     branches: [main]
@@ -21,28 +15,23 @@ concurrency:
 
 jobs:
   lint:
-    name: Lint & type-check
+    name: Lint & format
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
 
-      # ── Install runtime ────────────────────────────────
-      # Replace or extend with your language setup action.
-      # Examples:
-      #   Node:   actions/setup-node@v4
-      #   Python: actions/setup-python@v5
-      #   Go:     actions/setup-go@v5
-      #   Java:   actions/setup-java@v4
-      - name: Set up runtime
-        run: echo "Replace this step with your runtime setup"
+      - name: Set up Rust
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          components: rustfmt, clippy
 
-      # ── Install dependencies ───────────────────────────
-      - name: Install dependencies
-        run: echo "Replace with -> npm ci / pip install / go mod download / ..."
+      - uses: Swatinem/rust-cache@v2
 
-      # ── Lint ───────────────────────────────────────────
-      - name: Lint
-        run: echo "Replace with your lint command"
+      - name: Check formatting
+        run: cargo fmt --all --check
+
+      - name: Clippy
+        run: cargo clippy --workspace --all-targets -- -D warnings
 
   test:
     name: Tests
@@ -50,14 +39,16 @@ jobs:
     steps:
       - uses: actions/checkout@v6
 
-      - name: Set up runtime
-        run: echo "Replace this step with your runtime setup"
+      - name: Set up Rust
+        uses: dtolnay/rust-toolchain@stable
 
-      - name: Install dependencies
-        run: echo "Replace with your install command"
+      - uses: Swatinem/rust-cache@v2
 
       - name: Run tests
-        run: echo "Replace with your test command"
+        run: cargo test --workspace
+        # NOTE: once the `infrastructure` crate adds sqlx queries, this job will
+        # need a Postgres service (see docs/product-code/decisions/0002-axum-postgres-sqlx.md)
+        # for sqlx's compile-time query checking to succeed here.
 
   build:
     name: Build
@@ -66,19 +57,18 @@ jobs:
     steps:
       - uses: actions/checkout@v6
 
-      - name: Set up runtime
-        run: echo "Replace this step with your runtime setup"
+      - name: Set up Rust
+        uses: dtolnay/rust-toolchain@stable
 
-      - name: Install dependencies
-        run: echo "Replace with your install command"
+      - uses: Swatinem/rust-cache@v2
 
       - name: Build
-        run: echo "Replace with your build command"
+        run: cargo build --workspace --release
 
   # ── Always applicable, regardless of language ──────────────────────────
   # Backstop for the pre-push hook check: catches contributors who never
-  # activated .githooks. Independent of the placeholder jobs above so it
-  # keeps working after you replace lint/test/build with real steps.
+  # activated .githooks. Independent of the jobs above so it keeps working
+  # no matter what lint/test/build end up looking like.
   docs-todo-check:
     name: Documentation TODOs
     runs-on: ubuntu-latest
