@@ -1,8 +1,8 @@
 ---
 domain: team-process
 type: how-to
-owner: <!-- team/role that owns tooling -->
-last_reviewed:
+owner: Mathieu (solo maintainer)
+last_reviewed: 2026-07-02
 ---
 
 # How to Activate the Git Hooks

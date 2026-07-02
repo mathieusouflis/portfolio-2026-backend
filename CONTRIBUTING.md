@@ -1,6 +1,6 @@
 # Contributing
 
-Thank you for your interest in contributing! This document explains how to get involved, what we expect, and how to get your changes merged.
+Thank you for your interest in contributing! This is a solo-maintained personal project, but issues and pull requests from others are welcome. This document explains how to get involved, what to expect, and how changes get merged.
 
 ---
 
@@ -30,12 +30,12 @@ This project follows the [Contributor Covenant Code of Conduct](CODE_OF_CONDUCT.
 1. **Fork** the repository on GitHub
 2. **Clone** your fork locally:
    ```bash
-   git clone https://github.com/your-username/your-repo.git
-   cd your-repo
+   git clone https://github.com/your-username/portfolio-2026-backend.git
+   cd portfolio-2026-backend
    ```
 3. **Add the upstream remote:**
    ```bash
-   git remote add upstream https://github.com/your-org/your-repo.git
+   git remote add upstream https://github.com/mathieusouflis/portfolio-2026-backend.git
    ```
 4. Follow the full setup guide: [docs/product-code/tutorials/getting-started](docs/product-code/tutorials/getting-started.md)
 5. Activate the Git hooks (one-time, recommended — validates commit messages locally before you push): [docs/team-process/how-to/activate-git-hooks](docs/team-process/how-to/activate-git-hooks.md)
@@ -133,10 +133,9 @@ Enforced automatically both locally (if hooks are activated) and in CI — see [
 2. **Fill the PR template** — describe what changed and why
 3. **Keep diffs small** — large PRs are hard to review; split if needed. Aim for something reviewable in under 30 minutes
 4. **All CI checks must pass** before merging
-5. **Address review comments** — don't force-merge, iterate on feedback
-6. **Squash or rebase** before merge if history is messy
+5. **Squash or rebase** before merge if history is messy
 
-PRs are merged by maintainers once they have one approving review and all checks are green — see [docs/organizational/reference/todo_tool-inventory](docs/organizational/reference/todo_tool-inventory.md) / [.github/CODEOWNERS](.github/CODEOWNERS) for who that is on this project.
+This project is solo-maintained — there's no second reviewer, so a green CI run is the merge gate rather than an approving review. External PRs are read and merged (or discussed) by Mathieu directly. See [docs/organizational/reference/tool-inventory](docs/organizational/reference/tool-inventory.md) for the tools involved.
 
 ---
 
@@ -154,4 +153,4 @@ Every PR should maintain or improve the existing test coverage.
 
 ## Questions?
 
-Open a [Discussion](../../discussions).
+Open an [issue](../../issues) — there's no separate Discussions space for this project.

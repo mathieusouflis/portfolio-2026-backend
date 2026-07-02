@@ -1,8 +1,8 @@
 ---
 domain: product-code
 type: reference
-owner: <!-- team/role that owns configuration -->
-last_reviewed:
+owner: Mathieu (solo maintainer)
+last_reviewed: 2026-07-02
 ---
 
 # Environment Variables
@@ -11,11 +11,10 @@ Every variable this project reads from its environment, generated from [`.env.ex
 
 | Variable | Required | Default | Description |
 |----------|----------|---------|-------------|
-| `PORT` | No | `3000` | Port the server listens on — only applies if this project runs a network service; remove otherwise |
-| `HOST` | No | `0.0.0.0` | Host/interface the server binds to — only applies if this project runs a network service; remove otherwise |
-| `DATABASE_URL` | <!-- fill in --> | — | Connection string for the database |
-| `JWT_SECRET` | <!-- fill in --> | `change-me-before-deploying` | Secret used to sign/verify auth tokens — **must** be overridden in every real environment |
-| <!-- add rows for project-specific variables under "External services" in `.env.example` --> | | | |
+| `PORT` | No | `3000` | Port the Axum server listens on |
+| `HOST` | No | `0.0.0.0` | Host/interface the server binds to |
+| `DATABASE_URL` | Yes | — | Postgres connection string, e.g. `postgres://user:pass@localhost:5432/portfolio` |
+| `JWT_SECRET` | Not currently used | — | Reserved for future auth — this API is currently public-read-only with no auth surface. Remove from `.env.example` or leave commented until an auth-requiring endpoint exists |
 
 ---
 
@@ -25,7 +24,7 @@ Every variable this project reads from its environment, generated from [`.env.ex
 cp .env.example .env
 ```
 
-Then fill in every value above marked `Required: <!-- fill in -->`. Never commit the `.env` file — it is listed in `.gitignore`.
+Then fill in every value marked `Required: Yes` above. Never commit the `.env` file — it is listed in `.gitignore`.
 
 ## See also
 
