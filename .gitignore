@@ -55,3 +55,10 @@ temp/
 # Added by cargo
 
 **/*/target
+
+# ── Terraform ────────────────────────────────────────────
+.terraform/
+*.tfstate
+*.tfstate.*
+terraform.tfvars
+*.tfvars.json

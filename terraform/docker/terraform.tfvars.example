@@ -1,0 +1,6 @@
+# Copy to terraform.tfvars and adjust as needed. terraform.tfvars is gitignored.
+
+db_user     = "root"
+db_password = "root"
+db_name     = "backend"
+host_port   = 5432
