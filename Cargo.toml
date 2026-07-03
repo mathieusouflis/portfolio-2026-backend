@@ -9,10 +9,14 @@ members = [
   "crates/application",
   "crates/domain",
   "crates/infrastructure"
-]
+, "crates/shared"]
 
 
 [dependencies]
+axum = "0.8.9"
+tokio = { workspace = true, features = ["full"] }
+web = { path = "crates/web" }
+shared = { path = "crates/shared" }
 
 
 [workspace.dependencies]
