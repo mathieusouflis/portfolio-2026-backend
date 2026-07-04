@@ -1,6 +1,7 @@
 use std::net::Ipv4Addr;
 
 use domain::viewers::Viewer;
+use domain::viewers_repository::ViewersRepository;
 use sqlx::PgPool;
 use thiserror::Error;
 use uuid::Uuid;
@@ -21,8 +22,12 @@ impl PostgresViewersRepository {
     pub fn new(pool: PgPool) -> Self {
         Self { pool }
     }
+}
 
-    pub async fn create(&self, viewer: Viewer) -> Result<Viewer, PostgresViewersRepositoryErrors> {
+impl ViewersRepository for PostgresViewersRepository {
+    type Error = PostgresViewersRepositoryErrors;
+
+    async fn create(&self, viewer: Viewer) -> Result<Viewer, Self::Error> {
         let id = viewer.id();
         let ip = viewer.ip().to_string();
         let visit_date = viewer.visit_date();
@@ -39,10 +44,7 @@ impl PostgresViewersRepository {
         Ok(viewer)
     }
 
-    pub async fn get(
-        &self,
-        ip: Ipv4Addr,
-    ) -> Result<Option<Viewer>, PostgresViewersRepositoryErrors> {
+    async fn get(&self, ip: Ipv4Addr) -> Result<Option<Viewer>, Self::Error> {
         let ip = ip.to_string();
 
         let row = sqlx::query!(
@@ -61,11 +63,11 @@ impl PostgresViewersRepository {
         }))
     }
 
-    pub async fn delete(
+    async fn delete(
         &self,
         id: Option<Uuid>,
         ip: Option<Ipv4Addr>,
-    ) -> Result<Option<Viewer>, PostgresViewersRepositoryErrors> {
+    ) -> Result<Option<Viewer>, Self::Error> {
         if id.is_none() && ip.is_none() {
             return Err(PostgresViewersRepositoryErrors::KeyNotProvided);
         }
