@@ -8,8 +8,7 @@ use web::AppState;
 async fn main() {
     shared::env::load_dotenv();
 
-    let database_url =
-        shared::env::get_env_var("DATABASE_URL").expect("DATABASE_URL must be set");
+    let database_url = shared::env::get_env_var("DATABASE_URL").expect("DATABASE_URL must be set");
     let pool = PgPool::connect(&database_url)
         .await
         .expect("failed to connect to database");
