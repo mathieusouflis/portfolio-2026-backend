@@ -1,3 +1,4 @@
+use domain::key_value_repository::KeyValueRepository;
 use sqlx::PgPool;
 use thiserror::Error;
 
@@ -17,8 +18,12 @@ impl PostgresKeyValueRepository {
     pub fn new(pool: PgPool) -> Self {
         Self { pool }
     }
+}
 
-    pub async fn get(&self, key: &str) -> Result<Option<String>, PostgresKeyValueRepositoryErrors> {
+impl KeyValueRepository for PostgresKeyValueRepository {
+    type Error = PostgresKeyValueRepositoryErrors;
+
+    async fn get(&self, key: &str) -> Result<Option<String>, Self::Error> {
         if key.is_empty() {
             return Err(PostgresKeyValueRepositoryErrors::EmptyKey);
         }
@@ -30,7 +35,7 @@ impl PostgresKeyValueRepository {
         Ok(row.map(|row| row.value))
     }
 
-    pub async fn update(&self, key: &str, value: &str) -> Result<(), PostgresKeyValueRepositoryErrors> {
+    async fn update(&self, key: &str, value: &str) -> Result<(), Self::Error> {
         if key.is_empty() {
             return Err(PostgresKeyValueRepositoryErrors::EmptyKey);
         }
@@ -47,7 +52,7 @@ impl PostgresKeyValueRepository {
         Ok(())
     }
 
-    pub async fn delete(&self, key: &str) -> Result<(), PostgresKeyValueRepositoryErrors> {
+    async fn delete(&self, key: &str) -> Result<(), Self::Error> {
         if key.is_empty() {
             return Err(PostgresKeyValueRepositoryErrors::EmptyKey);
         }
