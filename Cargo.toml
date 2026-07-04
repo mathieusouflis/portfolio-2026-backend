@@ -16,7 +16,9 @@ members = [
 axum = "0.8.9"
 tokio = { workspace = true, features = ["full"] }
 web = { path = "crates/web" }
+infrastructure = { path = "crates/infrastructure" }
 shared = { path = "crates/shared" }
+sqlx = { version = "0.8", features = ["runtime-tokio", "tls-native-tls", "postgres"] }
 
 
 [workspace.dependencies]
