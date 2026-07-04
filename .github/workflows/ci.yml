@@ -17,6 +17,8 @@ jobs:
   lint:
     name: Lint & format
     runs-on: ubuntu-latest
+    env:
+      SQLX_OFFLINE: true
     steps:
       - uses: actions/checkout@v7
 
@@ -36,6 +38,8 @@ jobs:
   test:
     name: Tests
     runs-on: ubuntu-latest
+    env:
+      SQLX_OFFLINE: true
     steps:
       - uses: actions/checkout@v7
 
@@ -46,14 +50,13 @@ jobs:
 
       - name: Run tests
         run: cargo test --workspace
-        # NOTE: once the `infrastructure` crate adds sqlx queries, this job will
-        # need a Postgres service (see docs/product-code/decisions/0002-axum-postgres-sqlx.md)
-        # for sqlx's compile-time query checking to succeed here.
 
   build:
     name: Build
     runs-on: ubuntu-latest
     needs: [lint, test]
+    env:
+      SQLX_OFFLINE: true
     steps:
       - uses: actions/checkout@v7
 

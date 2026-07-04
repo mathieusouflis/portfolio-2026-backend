@@ -1,0 +1,35 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "DELETE FROM viewers\n             WHERE ($1::uuid IS NOT NULL AND id = $1) OR ($2::text IS NOT NULL AND ip = $2)\n             RETURNING id, ip, visit_date",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "id",
+        "type_info": "Uuid"
+      },
+      {
+        "ordinal": 1,
+        "name": "ip",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 2,
+        "name": "visit_date",
+        "type_info": "Date"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Uuid",
+        "Text"
+      ]
+    },
+    "nullable": [
+      false,
+      false,
+      false
+    ]
+  },
+  "hash": "d6a58b62757d938b0641fcf2fa714bbe4279b64d97d774d33669d92e4bdbe760"
+}
