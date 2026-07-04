@@ -14,7 +14,10 @@ async fn health_handler() -> impl IntoResponse {
     (StatusCode::OK, Json(HealthResponse { healthy: true }))
 }
 
-pub fn get_health_router() -> Router {
+pub fn get_health_router<S>() -> Router<S>
+where
+    S: Clone + Send + Sync + 'static,
+{
     Router::new()
         .route("/", get(health_handler))
         .route("/health", get(health_handler))
